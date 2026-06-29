@@ -1,9 +1,12 @@
 {
   "name": "mcp_server",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/server.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server:build:": "tsc",
+    "server:build:watch:": "tsc --watch",
+    "server:dev": "tsx src/server.ts"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +17,8 @@
     "express": "^5.2.1"
   },
   "devDependencies": {
+    "@types/node": "^26.0.1",
+    "tsx": "^4.22.4",
     "typescript": "^6.0.3"
   }
 }
