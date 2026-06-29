@@ -1,6 +1,7 @@
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import {McpServer} from "@modelcontextprotocol/sdk/server/mcp.js";
 import {z} from "zod";
+import fs from "node:fs/promises"
 
 // name = the type of tool u will be catering to 
 const server = new McpServer({
@@ -26,17 +27,29 @@ server.tool(
     idempotentHint: false,
     openWorldHint: true,
   },
-  async ({ name, email, address, phone }) => {
-    return {
-      content: [
-        {
-          type: "text",
-          text: `Created user ${name}`,
-        },
-      ],
-    };
+  async (params) => {
+      try{
+         const id = await createUser(params)
+      }
+      catch{
+          return {content :[{type : "text",text:" failed to save the user"}]};  
+      }
+    return {content :[{type : "text",text:' user created successfully!'}]}
   }
 );
+
+async function createUser(user: {
+  name: string,
+  email: string,
+  address: string,
+  phone: string
+}) {
+      const users = await import("./data/userdata.json",{with :{type:"json"}}).then(m=>m.default)
+      const id = users.length+1;
+      users.push({id,...user})
+      await fs.writeFile("./src/data/users.json",JSON.stringify(users,null,2));
+      return id;
+}
 
 async function main(){
       const transport = new StdioServerTransport();
